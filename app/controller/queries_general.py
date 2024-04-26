@@ -62,6 +62,7 @@ def get_fourth_query():
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad_Productos','id_order':'Pedido','send_value':'Valor_Envio'})
     df_res = df_res.rename(columns={'price_unit':'Precio_Unidad','discount_d_o':'Descuento'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.head(10).to_json(orient = "table"))
 
 """
@@ -78,6 +79,7 @@ def get_fifth_query():
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad_Productos','id_order':'Pedido','send_value':'Valor_Envio'})
     df_res = df_res.rename(columns={'price_unit':'Precio_Unidad','discount_d_o':'Descuento'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.head(10).to_json(orient = "table"))
 
 """
@@ -116,6 +118,7 @@ def get_eighth_query():
     df_res = df_p.filter(items=['product_name', 'exp_month'])
     df_res = pd.pivot_table(df_p, values=('product_name'), columns=['exp_month'], aggfunc="count")
     df_res = rename(df_res)
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.to_json(orient = "table"))
 
 """

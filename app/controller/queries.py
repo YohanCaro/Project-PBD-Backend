@@ -16,6 +16,8 @@ def get_first_query(filter):
     df_o = df_o[df_o['order_date'].dt.month == int(filter)]
     df_o['month'] = df_o['order_date'].dt.month_name()
     df_res = df_o.filter(items=['month','id_order'])
+    df_res = df_res.rename(columns={'month':'Mes', 'id_order':'Pedido'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.to_json(orient = "table"))
 
 """
@@ -43,6 +45,7 @@ def get_third_query(filter):
     df_res['Rank'] = df_res['quantity_d_o'].rank(method='max', ascending=False)
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad Productos'})
+    df_res.index.names = ['Producto']
     return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
 
 """
@@ -53,11 +56,13 @@ def get_fourth_query(filter):
     df_o = connection.get_data_frame_orders('select id_order,send_value from orders')
     df_d = connection.get_data_frame_orders('select id_order,price_unit,quantity_d_o,discount_d_o from details_orders')
     df_res = pd.merge(df_o, df_d, how='left', on='id_order')
-    df_res['total'] = df_res['send_value'] + ((df_res['price_unit']*df_res['quantity_d_o']) +
+    df_res['Total'] = df_res['send_value'] + ((df_res['price_unit']*df_res['quantity_d_o']) +
                       (df_res['price_unit']*df_res['quantity_d_o'])*df_res['discount_d_o'])
-    df_res['rank'] = df_res['total'].rank(method='max', ascending=False)
-    df_res = df_res.sort_values(by=['rank'])
+    df_res['Rank'] = df_res['Total'].rank(method='max', ascending=False)
+    df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.filter(items=['id_order','total','rank'])
+    df_res = df_res.rename(columns={'id_order':'Pedido'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
 
 """
@@ -68,11 +73,13 @@ def get_fifth_query(filter):
     df_o = connection.get_data_frame_orders('select id_order,send_value from orders')
     df_d = connection.get_data_frame_orders('select id_order,price_unit,quantity_d_o,discount_d_o from details_orders')
     df_res = pd.merge(df_o, df_d, how='left', on='id_order')
-    df_res['total'] = df_res['send_value'] + ((df_res['price_unit']*df_res['quantity_d_o']) +
+    df_res['Total'] = df_res['send_value'] + ((df_res['price_unit']*df_res['quantity_d_o']) +
                       (df_res['price_unit']*df_res['quantity_d_o'])*df_res['discount_d_o'])
-    df_res['rank'] = df_res['total'].rank(method='max')
-    df_res = df_res.sort_values(by=['rank'])
-    df_res = df_res.filter(items=['id_order','total','quantity_d_o','rank'])
+    df_res['Rank'] = df_res['Total'].rank(method='max')
+    df_res = df_res.sort_values(by=['Rank'])
+    df_res = df_res.filter(items=['id_order','Total','quantity_d_o','Rank'])
+    df_res = df_res.rename(columns={'id_order':'Pedido','quantity_d_o':'Cantidad'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
 
 """
@@ -84,8 +91,10 @@ def get_sixth_query(filter):
     df_s = connection.get_data_frame_orders('select * from suppliers')
     df_res = pd.merge(df_p,df_s, how='left', on='id_supplier')
     df_res = df_res.filter(items=['company_name', 'id_product']).groupby(['company_name']).sum()
-    df_res['rank'] = df_res['id_product'].rank(method='max', ascending=False)
-    df_res = df_res.sort_values(by=['rank'])
+    df_res['Rank'] = df_res['id_product'].rank(method='max', ascending=False)
+    df_res = df_res.sort_values(by=['Rank'])
+    df_res = df_res.rename(columns={'id_product':'Cantidad'})
+    df_res.index.names = ['Proveedor']
     return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
 
 """
@@ -99,6 +108,8 @@ def get_seventh_query(filter):
     df_res = df_res.filter(items=['company_name', 'units_in_stock']).groupby(['company_name']).sum()
     df_res['rank'] = df_res['units_in_stock'].rank(method='max', ascending=False)
     df_res = df_res.sort_values(by=['rank'])
+    df_res = df_res.rename(columns={'company_name':'Proveedor','units_in_stock':'Cantidad'})
+    df_res.index.names = ['Proveedor']
     return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
 
 """
@@ -110,6 +121,8 @@ def get_eighth_query(filter):
     df_p['exp_month'] = df_p['expiration_date'].dt.month_name()
     df_p = df_p[(df_p['expiration_date'].dt.month == int(filter))]
     df_res = df_p.filter(items=['product_name', 'exp_month'])
+    df_res = df_res.rename(columns={'product_name':'Producto','exp_month':'Mes'})
+    df_res = df_res.reset_index(drop=True)
     return indent_json(df_res.to_json(orient = "table"))
 
 """

@@ -4,31 +4,31 @@
       "code": "first",
       "index": 1,
       "title":"1 - Consulta que muestra los pedidos realizados cada mes en 2020 y 2021",
-      "description":"Puede digitar el número mes para ver los pedidos que se realizaron."
+      "description":"Puede digitar el n\u00famero mes para ver los pedidos que se realizaron."
     },
     {
     "code":"second",
       "index": 2,
       "title":"2 - Cantidad de pedidos por forma de pago",
-      "description":"Puede digitar el año para observar el total de pedidos por forma de pago (2021/2022)"
+      "description":"Puede digitar el a\u00f1o para observar el total de pedidos por forma de pago (2021/2022)"
     },
     {
      "code":"third",
       "index": 3,
-      "title":"3 - Los productos más vendidos",
-      "description":"Puede digitar la cantidad de productos que quiere obeservar en el ranking (Por defecto 10)"
+      "title":"3 - Los productos m\u00e1s vendidos",
+      "description":"Puede digitar la cantidad de productos que quiere observar en el ranking (Por defecto 10)"
     },
     {
      "code":"fourth",
       "index": 4,
-      "title":"4 - Ranking de pedidos más costosos",
-      "description":"Puede digitar la cantidad de pedidos que quiere obeservar en el ranking (Por defecto 10)"
+      "title":"4 - Ranking de pedidos m\u00e1s costosos",
+      "description":"Puede digitar la cantidad de pedidos que quiere observar en el ranking (Por defecto 10)"
     },
     {
      "code":"fifth",
       "index": 5,
-      "title":"5 - Ranking de pedidos más baratos",
-      "description":"Puede digitar la cantidad de pedidos que quiere obeservar en el ranking (Por defecto 10)"
+      "title":"5 - Ranking de pedidos m\u00e1s baratos",
+      "description":"Puede digitar la cantidad de pedidos que quiere observar en el ranking (Por defecto 10)"
     },
     {
      "code":"sixth",
@@ -45,20 +45,20 @@
     {
      "code":"eighth",
       "index": 8,
-      "title":"8 - Productos vencidos por mes en el año 2022",
-      "description":"Puede seleccionar el número del mes que desee para observar los prodcutos que se vencen"
+      "title":"8 - Productos vencidos por mes en el a\u00f1o 2022",
+      "description":"Puede seleccionar el n\u00famero del mes que desee para observar los productos que se vencen"
     },
     {
      "code":"ninth",
       "index": 9,
-      "title":"9 - Precio total de pedidos realizados por compañia de envios",
-      "description":"Puede seleccionar FILTRAR para ver la cantidad de pedidos por compañia de envios"
+      "title":"9 - Precio total de pedidos realizados por compa\u00f1ia de env\u00edos",
+      "description":"Puede seleccionar FILTRAR para ver la cantidad de pedidos por compa\u00f1ia de env\u00edos"
     },
     {
      "code":"tenth",
       "index": 10,
-      "title":"10 - Cantidad de ordenes realizadas por compañia de envios por mes",
-      "description":"Puede filtrar por compañia de envios (Digitando el nombre)"
+      "title":"10 - Cantidad de pedidos realizadas por compa\u00f1ia de env\u00edos por mes",
+      "description":"Puede filtrar por compa\u00f1ia de env\u00edos (Digitando el nombre)"
     }
   ]
 }
