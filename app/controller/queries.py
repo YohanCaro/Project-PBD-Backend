@@ -147,6 +147,30 @@ def get_tenth_query(filter):
     df_res = rename(df_res)
     return df_res
 
+def get_as_csv(query, filter):
+    if (query == 'first'):
+        return get_first_query(filter).to_csv("app\\report.csv")
+    elif (query == 'second'):
+        return get_second_query(filter).to_csv("app\\report.csv")
+    elif (query == 'third'):
+        return get_third_query(filter).to_csv("app\\report.csv")
+    elif (query == 'fourth'):
+        return get_fourth_query(filter).to_csv("app\\report.csv")
+    elif (query == 'fifth'):
+        return get_fifth_query(filter).to_csv("app\\report.csv")
+    elif (query == 'sixth'):
+        return get_sixth_query(filter).to_csv("app\\report.csv")
+    elif (query == 'seventh'):
+        return get_seventh_query(filter).to_csv("app\\report.csv")
+    elif (query == 'eighth'):
+        return get_eighth_query(filter).to_csv("app\\report.csv")
+    elif (query == 'ninth'):
+        return get_ninth_query().to_csv("app\\report.csv")
+    elif (query == 'tenth'):
+        return get_tenth_query(filter).to_csv("app\\report.csv")
+    else:
+        return 1
+
 def get_as_excel(query, filter):
     if (query == 'first'):
         return get_first_query(filter).to_excel("app\\report.xlsx")
@@ -165,14 +189,11 @@ def get_as_excel(query, filter):
     elif (query == 'eighth'):
         return get_eighth_query(filter).to_excel("app\\report.xlsx")
     elif (query == 'ninth'):
-        return get_ninth_query(filter).to_excel("app\\report.xlsx")
+        return get_ninth_query().to_excel("app\\report.xlsx")
     elif (query == 'tenth'):
         return get_tenth_query(filter).to_excel("app\\report.xlsx")
     else:
         return 1
-
-def get_as_xls():
-    return 1
 
 def get_descriptions_json():
     SITE_ROOT = os.path.realpath(os.path.dirname('app'))

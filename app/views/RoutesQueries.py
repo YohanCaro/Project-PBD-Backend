@@ -126,20 +126,31 @@ def get_tenth():
     else:
         return '<h2>BAD REQUEST</h2>'
     
-@main.route("/report", methods=['GET','POST'])
+@main.route("/report/excel", methods=['GET','POST'])
 @cross_origin()
-def get_report():
-    type = request.args.get('type')
+def get_report_xlsx():
     filter = request.args.get('filter')
     query = request.args.get('query')
-    print(filter)
-    print(query)
     if request.method == 'POST':
         queries.get_as_excel(query, filter)
         return send_file("report.xlsx", download_name='report_' + query + '.xlsx')
     elif request.method == 'GET':
         queries_general.get_as_excel(query)
         return send_file("report.xlsx", download_name='report_' + query + '.xlsx')
+    else:
+        return '<h2>BAD REQUEST</h2>'
+
+@main.route("/report/csv", methods=['GET','POST'])
+@cross_origin()
+def get_report_csv():
+    filter = request.args.get('filter')
+    query = request.args.get('query')
+    if request.method == 'POST':
+        queries.get_as_csv(query, filter)
+        return send_file("report.csv", download_name='report_' + query + '.csv')
+    elif request.method == 'GET':
+        queries_general.get_as_csv(query)
+        return send_file("report.csv", download_name='report_' + query + '.csv')
     else:
         return '<h2>BAD REQUEST</h2>'
 

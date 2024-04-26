@@ -143,6 +143,30 @@ def get_tenth_query():
     df_res.index.names = ['Anio','Compania_Envios']
     return df_res
 
+def get_as_csv(query):
+    if (query == 'first'):
+        return get_first_query().to_csv("app\\report.csv")
+    elif (query == 'second'):
+        return get_second_query().to_csv("app\\report.csv")
+    elif (query == 'third'):
+        return get_third_query().to_csv("app\\report.csv")
+    elif (query == 'fourth'):
+        return get_fourth_query().to_csv("app\\report.csv")
+    elif (query == 'fifth'):
+        return get_fifth_query().to_csv("app\\report.csv")
+    elif (query == 'sixth'):
+        return get_sixth_query().to_csv("app\\report.csv")
+    elif (query == 'seventh'):
+        return get_seventh_query().to_csv("app\\report.csv")
+    elif (query == 'eighth'):
+        return get_eighth_query().to_csv("app\\report.csv")
+    elif (query == 'ninth'):
+        return get_ninth_query().to_csv("app\\report.csv")
+    elif (query == 'tenth'):
+        return get_tenth_query().to_csv("app\\report.csv")
+    else:
+        return 1
+
 def get_as_excel(query):
     if (query == 'first'):
         return get_first_query().to_excel("app\\report.xlsx")
