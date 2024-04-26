@@ -1,6 +1,8 @@
 from app.controller import queries, queries_general
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 from flask_cors import cross_origin
+
+from json import loads, dumps
 
 main = Blueprint('q_blueprint',__name__)
 
@@ -19,9 +21,9 @@ def get_first():
     res = request.args.get('filter')
     print(request)
     if request.method == 'POST':
-        return queries.get_first_query(res)
+        return indent_json(queries.get_first_query(res))
     elif request.method == 'GET':
-        return queries_general.get_first_query()
+        return indent_json(queries_general.get_first_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -30,9 +32,9 @@ def get_first():
 def get_second():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_second_query(res)
+        return indent_json(queries.get_second_query(res))
     elif request.method == 'GET':
-        return queries_general.get_second_query()
+        return indent_json(queries_general.get_second_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -41,9 +43,9 @@ def get_second():
 def get_third():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_third_query(res)
+        return indent_json(queries.get_third_query(res))
     elif request.method == 'GET':
-        return queries_general.get_third_query()
+        return indent_json(queries_general.get_third_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -52,9 +54,9 @@ def get_third():
 def get_fourth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_fourth_query(res)
+        return indent_json(queries.get_fourth_query(res))
     elif request.method == 'GET':
-        return queries_general.get_fourth_query()
+        return indent_json(queries_general.get_fourth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -63,9 +65,9 @@ def get_fourth():
 def get_fifth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_fifth_query(res)
+        return indent_json(queries.get_fifth_query(res))
     elif request.method == 'GET':
-        return queries_general.get_fifth_query()
+        return indent_json(queries_general.get_fifth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -74,9 +76,9 @@ def get_fifth():
 def get_sixth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_sixth_query(res)
+        return indent_json(queries.get_sixth_query(res))
     elif request.method == 'GET':
-        return queries_general.get_sixth_query()
+        return indent_json(queries_general.get_sixth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -85,9 +87,9 @@ def get_sixth():
 def get_seventh():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_seventh_query(res)
+        return indent_json(queries.get_seventh_query(res))
     elif request.method == 'GET':
-        return queries_general.get_seventh_query()
+        return indent_json(queries_general.get_seventh_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -96,9 +98,9 @@ def get_seventh():
 def get_eighth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_eighth_query(res)
+        return indent_json(queries.get_eighth_query(res))
     elif request.method == 'GET':
-        return queries_general.get_eighth_query()
+        return indent_json(queries_general.get_eighth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -107,9 +109,9 @@ def get_eighth():
 def get_ninth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_ninth_query()
+        return indent_json(queries.get_ninth_query())
     elif request.method == 'GET':
-        return queries_general.get_ninth_query()
+        return indent_json(queries_general.get_ninth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
 
@@ -118,8 +120,33 @@ def get_ninth():
 def get_tenth():
     res = request.args.get('filter')
     if request.method == 'POST':
-        return queries.get_tenth_query(res)
+        return indent_json(queries.get_tenth_query(res))
     elif request.method == 'GET':
-        return queries_general.get_tenth_query()
+        return indent_json(queries_general.get_tenth_query())
     else:
         return '<h2>BAD REQUEST</h2>'
+    
+@main.route("/report", methods=['GET','POST'])
+@cross_origin()
+def get_report():
+    type = request.args.get('type')
+    filter = request.args.get('filter')
+    query = request.args.get('query')
+    print(filter)
+    print(query)
+    if request.method == 'POST':
+        queries.get_as_excel(query, filter)
+        return send_file("report.xlsx", download_name='report_' + query + '.xlsx')
+    elif request.method == 'GET':
+        queries_general.get_as_excel(query)
+        return send_file("report.xlsx", download_name='report_' + query + '.xlsx')
+    else:
+        return '<h2>BAD REQUEST</h2>'
+
+def indent_json(data):
+    parsed = loads(return_json(data))
+    r = dumps(parsed, indent=4) 
+    return r
+
+def return_json(data):
+    return data.to_json(orient = "table")

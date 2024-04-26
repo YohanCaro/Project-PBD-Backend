@@ -1,12 +1,6 @@
 from app.db import connection
-from json import loads, dumps
 import os
 import pandas as pd
-
-def indent_json(data):
-    parsed = loads(data)
-    r = dumps(parsed, indent=4) 
-    return r
 
 """
 Cantidad de pedidos realizados en los distintos años
@@ -19,7 +13,7 @@ def get_first_query():
     df_o = df_o.filter(items=['month', 'id_order', 'year'])
     df_res = pd.pivot_table(df_o, values=('id_order'), index=['year'], columns=['month'], aggfunc="count")
     df_res = rename(df_res)
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de pedidos por forma de pago.
@@ -32,7 +26,7 @@ def get_second_query():
     df_res = df_o[['payment_method', 'id_order']].groupby(['payment_method']).count()
     df_res = df_res.rename(columns={'id_order':'Cantidad_Pedidos'})
     df_res.index.names = ['Metodo_Pago']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 10 productos mas vendidos
@@ -46,7 +40,7 @@ def get_third_query():
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad_Productos'})
     df_res.index.names = ['Producto']
-    return indent_json(df_res.head(10).to_json(orient = "table"))
+    return df_res.head(10)
 
 """
 Top ordenes más costosas
@@ -63,7 +57,7 @@ def get_fourth_query():
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad_Productos','id_order':'Pedido','send_value':'Valor_Envio'})
     df_res = df_res.rename(columns={'price_unit':'Precio_Unidad','discount_d_o':'Descuento'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.head(10).to_json(orient = "table"))
+    return df_res.head(10)
 
 """
 Top ordenes menos costosas
@@ -80,7 +74,7 @@ def get_fifth_query():
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad_Productos','id_order':'Pedido','send_value':'Valor_Envio'})
     df_res = df_res.rename(columns={'price_unit':'Precio_Unidad','discount_d_o':'Descuento'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.head(10).to_json(orient = "table"))
+    return df_res.head(10)
 
 """
 Cantidad de productos por proveedor (sin contar en stock)
@@ -93,7 +87,7 @@ def get_sixth_query():
     df_res = df_res.filter(items=['company_name', 'id_product']).groupby(['company_name']).sum()
     df_res = df_res.rename(columns={'id_product':'Cantidad_Productos'})
     df_res.index.names = ['Proveedor']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de productos por proveedor (contando en stock)
@@ -106,7 +100,7 @@ def get_seventh_query():
     df_res = df_res.filter(items=['company_name', 'units_in_stock']).groupby(['company_name']).sum()
     df_res = df_res.rename(columns={'units_in_stock':'Cantidad_Productos'})
     df_res.index.names = ['Proveedor']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Productos vencidos por mes en el año 2022
@@ -119,7 +113,7 @@ def get_eighth_query():
     df_res = pd.pivot_table(df_p, values=('product_name'), columns=['exp_month'], aggfunc="count")
     df_res = rename(df_res)
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Precio total de las ordenes realizadas por compañia de envios
@@ -132,7 +126,7 @@ def get_ninth_query():
     df_res = df_join.filter(items=['shipping_company_name', 'send_value']).groupby(['shipping_company_name']).sum()
     df_res = df_res.rename(columns={'send_value':'Precio_Total'})
     df_res.index.names = ['Compania_Envios']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de ordenes realizadas por compañia de envios por mes
@@ -147,7 +141,31 @@ def get_tenth_query():
     df_res = pd.pivot_table(df_res, values=('id_order'), index=['delivery_year','shipping_company_name'], columns=['delivery_month'], aggfunc="count")
     df_res = rename(df_res)
     df_res.index.names = ['Anio','Compania_Envios']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
+
+def get_as_excel(query):
+    if (query == 'first'):
+        return get_first_query().to_excel("app\\report.xlsx")
+    elif (query == 'second'):
+        return get_second_query().to_excel("app\\report.xlsx")
+    elif (query == 'third'):
+        return get_third_query().to_excel("app\\report.xlsx")
+    elif (query == 'fourth'):
+        return get_fourth_query().to_excel("app\\report.xlsx")
+    elif (query == 'fifth'):
+        return get_fifth_query().to_excel("app\\report.xlsx")
+    elif (query == 'sixth'):
+        return get_sixth_query().to_excel("app\\report.xlsx")
+    elif (query == 'seventh'):
+        return get_seventh_query().to_excel("app\\report.xlsx")
+    elif (query == 'eighth'):
+        return get_eighth_query().to_excel("app\\report.xlsx")
+    elif (query == 'ninth'):
+        return get_ninth_query().to_excel("app\\report.xlsx")
+    elif (query == 'tenth'):
+        return get_tenth_query().to_excel("app\\report.xlsx")
+    else:
+        return 1
 
 def rename(daf):
     daf = daf.rename(columns={1:'January'})

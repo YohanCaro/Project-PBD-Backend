@@ -1,12 +1,8 @@
 from app.db import connection
-from json import loads, dumps, load
+from json import load
 import os
 import pandas as pd
 
-def indent_json(data):
-    parsed = loads(data)
-    r = dumps(parsed, indent=4) 
-    return r
 """
 Cantidad de pedidos realizados en los distintos años / muestra las ordenes
 Return: return datatable in json
@@ -18,7 +14,7 @@ def get_first_query(filter):
     df_res = df_o.filter(items=['month','id_order'])
     df_res = df_res.rename(columns={'month':'Mes', 'id_order':'Pedido'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de pedidos por forma de pago.
@@ -32,7 +28,7 @@ def get_second_query(filter):
     df_res = df_o[['payment_method', 'id_order']].groupby(['payment_method']).count()
     df_res = df_res.rename(columns={'id_order':'Cantidad Pedidos'})
     df_res.index.names = ['Producto']
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 10 productos mas vendidos
@@ -46,7 +42,7 @@ def get_third_query(filter):
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'quantity_d_o':'Cantidad Productos'})
     df_res.index.names = ['Producto']
-    return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
+    return df_res.head(int(filter))
 
 """
 Top ordenes más costosas
@@ -63,7 +59,7 @@ def get_fourth_query(filter):
     df_res = df_res.filter(items=['id_order','total','rank'])
     df_res = df_res.rename(columns={'id_order':'Pedido'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
+    return df_res.head(int(filter))
 
 """
 Top ordenes menos costosas
@@ -80,7 +76,7 @@ def get_fifth_query(filter):
     df_res = df_res.filter(items=['id_order','Total','quantity_d_o','Rank'])
     df_res = df_res.rename(columns={'id_order':'Pedido','quantity_d_o':'Cantidad'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
+    return df_res.head(int(filter))
 
 """
 Cantidad de productos por proveedor (sin contar en stock)
@@ -95,7 +91,7 @@ def get_sixth_query(filter):
     df_res = df_res.sort_values(by=['Rank'])
     df_res = df_res.rename(columns={'id_product':'Cantidad'})
     df_res.index.names = ['Proveedor']
-    return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
+    return df_res.head(int(filter))
 
 """
 Cantidad de productos por proveedor (contando en stock)
@@ -110,7 +106,7 @@ def get_seventh_query(filter):
     df_res = df_res.sort_values(by=['rank'])
     df_res = df_res.rename(columns={'company_name':'Proveedor','units_in_stock':'Cantidad'})
     df_res.index.names = ['Proveedor']
-    return indent_json(df_res.head(int(filter)).to_json(orient = "table"))
+    return df_res.head(int(filter))
 
 """
 Productos vencidos por mes en el año 2022
@@ -123,7 +119,7 @@ def get_eighth_query(filter):
     df_res = df_p.filter(items=['product_name', 'exp_month'])
     df_res = df_res.rename(columns={'product_name':'Producto','exp_month':'Mes'})
     df_res = df_res.reset_index(drop=True)
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de ordenes realizadas por compañia de envios
@@ -134,7 +130,7 @@ def get_ninth_query():
     df_s = connection.get_data_frame_orders('select * from shipping_company')
     df_join = pd.merge(df_o,df_s, how='left', on='id_shipping_company')
     df_res = df_join.filter(items=['shipping_company_name', 'id_order']).groupby(['shipping_company_name']).count()
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
 
 """
 Cantidad de ordenes realizadas por compañia de envios por mes
@@ -149,7 +145,34 @@ def get_tenth_query(filter):
     df_res['delivery_month'] = df_res['delivery_date'].dt.month
     df_res = pd.pivot_table(df_res, values=('id_order'), index=['delivery_year'], columns=['delivery_month'], aggfunc="count")
     df_res = rename(df_res)
-    return indent_json(df_res.to_json(orient = "table"))
+    return df_res
+
+def get_as_excel(query, filter):
+    if (query == 'first'):
+        return get_first_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'second'):
+        return get_second_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'third'):
+        return get_third_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'fourth'):
+        return get_fourth_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'fifth'):
+        return get_fifth_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'sixth'):
+        return get_sixth_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'seventh'):
+        return get_seventh_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'eighth'):
+        return get_eighth_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'ninth'):
+        return get_ninth_query(filter).to_excel("app\\report.xlsx")
+    elif (query == 'tenth'):
+        return get_tenth_query(filter).to_excel("app\\report.xlsx")
+    else:
+        return 1
+
+def get_as_xls():
+    return 1
 
 def get_descriptions_json():
     SITE_ROOT = os.path.realpath(os.path.dirname('app'))
