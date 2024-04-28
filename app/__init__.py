@@ -19,7 +19,3 @@ def init_app():
 
     return app
 
-
-
-
-
